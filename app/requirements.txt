@@ -1,0 +1,6 @@
+Django
+pytest
+django-pytest
+pytest-factoryboy
+pytest-selenium
+pillow
