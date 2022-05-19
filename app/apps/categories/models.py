@@ -18,3 +18,5 @@ class Category(MPTTModel):
         ordering = ["name"]
         verbose_name_plural = _("categories")
 
+    def __str__(self):
+        return f'{self.name}'

@@ -4,3 +4,4 @@ django-pytest
 pytest-factoryboy
 pytest-selenium
 pillow
+djangorestframework

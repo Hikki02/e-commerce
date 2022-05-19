@@ -11,6 +11,7 @@ class Product(models.Model):
         'categories.Category', on_delete=models.SET_NULL, related_name='product', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, editable=False, )
     updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.name}'
@@ -50,15 +51,26 @@ class Brand(models.Model):
     name = models.CharField(max_length=125)
 
 
+
 class ProductInventory(models.Model):
-    sku = models.CharField(max_length=50, unique=True)
-    upc = models.CharField(max_length=50, unique=True)
-    product_type = models.ForeignKey(
-        ProductType, related_name="product_type", on_delete=models.PROTECT,
+    sku = models.CharField(
+        max_length=20,
+        unique=True,
     )
-    product = models.ForeignKey(Product, related_name="product", on_delete=models.PROTECT)
+    upc = models.CharField(
+        max_length=12,
+        unique=True,
+    )
+    product_type = models.ForeignKey(
+        ProductType, related_name="product_type", on_delete=models.PROTECT
+    )
+    product = models.ForeignKey(
+        Product, related_name="product", on_delete=models.PROTECT
+    )
     brand = models.ForeignKey(
-        Brand, related_name="brand", on_delete=models.SET_NULL,
+        Brand,
+        related_name="brand",
+        on_delete=models.SET_NULL,
         blank=True,
         null=True,
     )
@@ -68,37 +80,37 @@ class ProductInventory(models.Model):
         through="ProductAttributeValues",
     )
     is_active = models.BooleanField(
-        default=False
+        default=False,
     )
     is_default = models.BooleanField(
-        default=False
+        default=False,
     )
     retail_price = models.DecimalField(
         max_digits=5,
         decimal_places=2,
         error_messages={
             "name": {
-                "max_length": _("the price must be between 0 and 999.99")
-            }
-        }
+                "max_length": _("the price must be between 0 and 999.99."),
+            },
+        },
     )
     store_price = models.DecimalField(
         max_digits=5,
         decimal_places=2,
         error_messages={
             "name": {
-                "max_length": _("the price must be between 0 and 999.99")
-            }
-        }
+                "max_length": _("the price must be between 0 and 999.99."),
+            },
+        },
     )
     sale_price = models.DecimalField(
         max_digits=5,
         decimal_places=2,
         error_messages={
             "name": {
-                "max_length": _("the price must be between 0 and 999.99")
-            }
-        }
+                "max_length": _("the price must be between 0 and 999.99."),
+            },
+        },
     )
     is_on_sale = models.BooleanField(
         default=False,
@@ -107,11 +119,16 @@ class ProductInventory(models.Model):
         default=False,
     )
     weight = models.FloatField()
-    created_at = models.DateTimeField(auto_now_add=True, editable=False)
-    updated_at = models.DateTimeField(auto_now=True, )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        editable=False,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
 
     def __str__(self):
-        return f'{self.sku}'
+        return self.sku
 
 
 class Media(models.Model):
@@ -132,6 +149,7 @@ class Stock(models.Model):
     last_checked = models.DateTimeField(null=True, blank=True)
     units = models.IntegerField(default=0)
     units_sold = models.IntegerField(default=0)
+
 
 
 class ProductAttributeValues(models.Model):
